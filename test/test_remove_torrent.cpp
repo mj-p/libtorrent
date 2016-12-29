@@ -64,9 +64,6 @@ void test_remove_torrent(remove_flags_t const remove_options
 	std::vector<session_proxy> sp;
 	settings_pack pack = settings();
 
-	// we do this to force pieces to be evicted into the ghost lists
-	pack.set_int(settings_pack::cache_size, 10);
-
 	pack.set_str(settings_pack::listen_interfaces, "0.0.0.0:48075");
 	lt::session ses1(pack);
 
@@ -132,7 +129,7 @@ void test_remove_torrent(remove_flags_t const remove_options
 			|| st2.state == torrent_status::checking_resume_data);
 
 		// if nothing is being transferred after 3 seconds, we're failing the test
-		if (st1.upload_payload_rate == 0 && i > 30)
+		if (st1.total_payload_upload == 0 && i > 30)
 		{
 			TEST_ERROR("no transfer");
 			return;
